@@ -20,33 +20,9 @@ namespace campuslove_Juliana_Eduardo.src.Shared.Configurations
                           .IsRequired()
                           .HasMaxLength(100);
 
-                     builder.Property(u => u.Email)
-                            .IsRequired()
-                            .HasMaxLength(100);
-                     builder.HasIndex(u => u.Email).IsUnique();
+                     
 
-                     builder.Property(u => u.Edad)
-                            .IsRequired();
-
-                     builder.Property(u => u.Genero)
-                            .IsRequired()
-                            .HasMaxLength(100);
-
-                     builder.Property(u => u.Profesion)
-                            .IsRequired()
-                            .HasMaxLength(100);
-
-                     builder.Property(u => u.Intereses)
-                            .IsRequired()
-                            .HasMaxLength(200);
-
-                     builder.Property(u => u.Frase)
-                            .IsRequired()
-                            .HasMaxLength(200);
-                   
-                   builder.Property(u => u.LikesDisponibles)
-                   .HasColumnName("likes_disponibles")
-                   .HasDefaultValue(5);
+              
         }
     }
 }

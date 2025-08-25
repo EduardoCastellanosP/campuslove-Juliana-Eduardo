@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj": {}
+    "C:\\Users\\LENOVO\\OneDrive\\Documentos\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj": {}
   },
   "projects": {
-    "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj": {
+    "C:\\Users\\LENOVO\\OneDrive\\Documentos\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj",
+        "projectUniqueName": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj",
         "projectName": "campuslove-Juliana-Eduardo",
-        "projectPath": "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj",
+        "projectPath": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj",
         "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\obj\\",
+        "outputPath": "C:\\Users\\LENOVO\\OneDrive\\Documentos\\campuslove-Juliana-Eduardo\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config"

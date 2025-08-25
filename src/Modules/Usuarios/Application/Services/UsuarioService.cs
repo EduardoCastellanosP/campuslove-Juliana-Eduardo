@@ -10,13 +10,12 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.Application.Services
     public class UsuarioService : IUsuarioService
     {
         private readonly IUsuarioRepository _repo;
+        
 
-
-
-        public UsuarioService(IUsuarioRepository repo)
+        public UsuarioService(IUsuarioRepository repo )
         {
             _repo = repo;
-
+            
         }
 
         public Task<IEnumerable<Usuario>> ConsultarUsuarioAsync()
