@@ -13,9 +13,12 @@ namespace campuslove_Juliana_Eduardo.src.Shared.Context
         {
         }
         public DbSet<Usuario> Usuarios => Set<Usuario>();
+         public DbSet<Like> Likes { get; set; } = null!;
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.ApplyConfigurationsFromAssembly(typeof(AppDbContext).Assembly);
+            base.OnModelCreating(modelBuilder);
         }
     }
 }

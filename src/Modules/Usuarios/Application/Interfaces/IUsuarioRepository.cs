@@ -14,5 +14,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.Application.Interfaces
         Task Update(Usuario entity);
         Task Remove(Usuario entity);
         Task SaveAsync();
+
+        Task<Usuario?> GetByNombreAsync(string nombre);
     }
 }

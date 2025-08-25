@@ -8,7 +8,8 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.Application.Interfaces
 {
     public interface IUsuarioService
     {
-        Task RegistrarUsuarioAsync(string nombre,string email, int edad,  string genero, string profesion, string interes, string frase );
+        Task CrearUsuarioAsync(string nombre,string clave); 
+        Task RegistrarUsuarioAsync(string nombre,string email, int edad,  string genero, string profesion, string intereses, string frase );
         Task ActualizarUsuarioAsync(int id, string nuevoNombre,string nuevoEmail, int nuevaEdad,  string nuevoGenero, string nuevaProfesion, string nuevoIntereses, string nuevaFrase );
         Task EliminarUsuarioAsync(int id);
         Task<Usuario?> ObtenerUsuarioPorIdAsync(int id);

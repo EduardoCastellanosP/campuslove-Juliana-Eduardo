@@ -32,16 +32,27 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.Infrastructure.Reposit
 
         public async Task Remove(Usuario entity)
         {
-              _context.Usuarios.Remove(entity);
+            _context.Usuarios.Remove(entity);
 
-         }
-          
-        public async Task Update(Usuario entity)
-         {
-             _context.SaveChanges();
         }
-            
+
+        public async Task Update(Usuario entity)
+        {
+            _context.SaveChanges();
+        }
+
         public async Task SaveAsync() =>
             await _context.SaveChangesAsync();
+
+
+
+         public async Task<Usuario?> GetByNombreAsync(string nombre)
+        {
+            var n = (nombre ?? string.Empty).Trim();
+            return await _context.Usuarios
+                .FirstOrDefaultAsync(u => u.Nombre == n);
+        }
     }
+    
+
 }

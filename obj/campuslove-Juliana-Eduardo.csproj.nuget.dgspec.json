@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "/home/camper/examencsharp/campuslove-Juliana-Eduardo/campuslove-Juliana-Eduardo.csproj": {}
+    "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj": {}
   },
   "projects": {
-    "/home/camper/examencsharp/campuslove-Juliana-Eduardo/campuslove-Juliana-Eduardo.csproj": {
+    "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "/home/camper/examencsharp/campuslove-Juliana-Eduardo/campuslove-Juliana-Eduardo.csproj",
+        "projectUniqueName": "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj",
         "projectName": "campuslove-Juliana-Eduardo",
-        "projectPath": "/home/camper/examencsharp/campuslove-Juliana-Eduardo/campuslove-Juliana-Eduardo.csproj",
-        "packagesPath": "/home/camper/.nuget/packages/",
-        "outputPath": "/home/camper/examencsharp/campuslove-Juliana-Eduardo/obj/",
+        "projectPath": "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\campuslove-Juliana-Eduardo.csproj",
+        "packagesPath": "C:\\Users\\LENOVO\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\LENOVO\\OneDrive\\Pictures\\campuslove-Juliana-Eduardo\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "/home/camper/.nuget/NuGet/NuGet.Config"
+          "C:\\Users\\LENOVO\\AppData\\Roaming\\NuGet\\NuGet.Config"
         ],
         "originalTargetFrameworks": [
           "net9.0"
@@ -38,7 +38,7 @@
           "auditLevel": "low",
           "auditMode": "direct"
         },
-        "SdkAnalysisLevel": "9.0.200"
+        "SdkAnalysisLevel": "9.0.300"
       },
       "frameworks": {
         "net9.0": {
@@ -91,7 +91,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "/usr/share/dotnet/sdk/9.0.203/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\9.0.304/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
