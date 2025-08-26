@@ -131,9 +131,6 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
         private Task<int> ContarDisLikesRecibidosAsync(int usuarioId) =>
             _context.Likes.CountAsync(l => l.UsuarioLikedId == usuarioId && !l.EsLike);
 
-        // ===========================
-        // SOLO UNA REACCIÓN POR PAREJA
-        // ===========================
         private async Task<bool> ReaccionarAsync(int usuarioId, int usuarioLikedId, bool esLike)
         {
             if (usuarioId == usuarioLikedId)
@@ -142,7 +139,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                 return false;
             }
 
-            // ¿Ya existe cualquier reacción (like o dislike) entre ambos?
+           
             bool yaExiste = await _context.Likes
                 .AnyAsync(l => l.UsuarioId == usuarioId && l.UsuarioLikedId == usuarioLikedId);
 
@@ -152,6 +149,22 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                 return false;
             }
 
+            var actor = await _context.Usuarios
+                .SingleOrDefaultAsync(u => u.Id == usuarioId);
+
+            if (actor is null)
+            {
+                Console.WriteLine("❌ Usuario no encontrado.");
+                return false;
+            }
+
+            if (actor.LikesDisponibles <= 0)
+            {
+                Console.WriteLine("⚠️ No te quedan reacciones disponibles.");
+                return false;
+            }
+
+            
             await _context.Likes.AddAsync(new Like
             {
                 UsuarioId = usuarioId,
@@ -160,7 +173,11 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                 Fecha = DateTime.UtcNow
             });
 
+            actor.LikesDisponibles -= 1;
+
             await _context.SaveChangesAsync();
+
+            Console.WriteLine($"🔋 Te quedan {actor.LikesDisponibles} reacciones.");
             return true;
         }
 
