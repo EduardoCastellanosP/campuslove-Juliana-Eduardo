@@ -12,6 +12,8 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.Domain.Entities
         public int UsuarioId { get; set; }      
         public int UsuarioLikedId { get; set; } 
 
+        public bool EsLike { get; set; } = true;
+
         public DateTime Fecha { get; set; } = DateTime.UtcNow;
 
         public Usuario? Usuario { get; set; }

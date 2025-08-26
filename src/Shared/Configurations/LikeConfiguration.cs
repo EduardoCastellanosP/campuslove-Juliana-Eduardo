@@ -9,23 +9,40 @@ namespace campuslove_Juliana_Eduardo.src.Shared.Configurations
         public void Configure(EntityTypeBuilder<Like> builder)
         {
             builder.ToTable("likes");
+
             builder.HasKey(l => l.Id);
+            builder.Property(l => l.Id).HasColumnName("id");
 
-            builder.Property(l => l.UsuarioId).IsRequired();
-            builder.Property(l => l.UsuarioLikedId).IsRequired();
-            builder.Property(l => l.Fecha).HasDefaultValueSql("CURRENT_TIMESTAMP");
+            builder.Property(l => l.UsuarioId).HasColumnName("usuario_id").IsRequired();
+            builder.Property(l => l.UsuarioLikedId).HasColumnName("usuario_liked_id").IsRequired();
 
+        
+            builder.Property(l => l.EsLike)
+                   .HasColumnName("es_like")
+                   .HasDefaultValue(true)   
+                   .IsRequired();
+
+            builder.Property(l => l.Fecha)
+                   .HasColumnName("fecha")
+                   .HasDefaultValueSql("CURRENT_TIMESTAMP");
+
+            
             builder.HasOne(l => l.Usuario)
-                   .WithMany()
+                   .WithMany(u => u.LikesDados)
                    .HasForeignKey(l => l.UsuarioId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .HasConstraintName("fk_likes_usuario")
+                   .OnDelete(DeleteBehavior.Cascade);
 
             builder.HasOne(l => l.UsuarioLiked)
-                   .WithMany()
+                   .WithMany(u => u.LikesRecibidos)
                    .HasForeignKey(l => l.UsuarioLikedId)
-                   .OnDelete(DeleteBehavior.Restrict);
+                   .HasConstraintName("fk_likes_usuario_liked")
+                   .OnDelete(DeleteBehavior.Cascade);
 
-            builder.HasIndex(l => new { l.UsuarioId, l.UsuarioLikedId }).IsUnique();
+            
+            builder.HasIndex(l => new { l.UsuarioId, l.UsuarioLikedId, l.EsLike })
+                   .IsUnique()
+                   .HasDatabaseName("ux_likes_pair_type");
         }
     }
 }

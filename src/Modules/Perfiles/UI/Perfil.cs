@@ -1,5 +1,6 @@
+// src/Modules/Perfiles/UI/Perfil.cs
 using System;
-using System.Linq; // <-- IMPORTANTE
+using System.Linq; // necesario para Where/Any/SingleOrDefault
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using campuslove_Juliana_Eduardo.src.Shared.Context;
@@ -25,11 +26,10 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                 return;
             }
 
-            // Cargar usuarios + su perfil (tabla 'datos')
             var usuarios = await _context.Set<Usuario>()
                 .AsNoTracking()
-                .Include(u => u.Dato) 
-                .Where(u => u.Id != miUsuarioId) // no mostrarte a ti mismo
+                .Include(u => u.Dato)
+                .Where(u => u.Id != miUsuarioId)
                 .ToListAsync();
 
             if (usuarios.Count == 0)
@@ -48,20 +48,34 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                 var u = usuarios[idx];
                 var d = u.Dato; // puede ser null si aún no registraron "datos" para ese usuario
 
-                Console.WriteLine("=== Perfil ===");
-                Console.WriteLine($"ID        : {u.Id}");
-                Console.WriteLine($"Nombre    : {d?.Nombre ?? u.Nombre}"); // muestra el de datos si existe, sino el de usuario
+                var nombre     = d?.Nombre ?? u.Nombre;
+                var edad       = d != null ? d.Edad.ToString() : "—";
+                var genero     = string.IsNullOrWhiteSpace(d?.Genero)     ? "—" : d!.Genero;
+                var profesion  = string.IsNullOrWhiteSpace(d?.Profesion)  ? "—" : d!.Profesion;
+                var intereses  = string.IsNullOrWhiteSpace(d?.Intereses)  ? "—" : d!.Intereses;
+                var frase      = string.IsNullOrWhiteSpace(d?.Frase)      ? "—" : d!.Frase;
 
-                // Campos que ahora están en 'datos'
-                Console.WriteLine($"Edad      : {(d is null ? "—" : d.Edad.ToString())}");
-                Console.WriteLine($"Género    : {d?.Genero ?? "—"}");
-                Console.WriteLine($"Profesión : {d?.Profesion ?? "—"}");
-                Console.WriteLine($"Intereses : {d?.Intereses ?? "—"}");
-                Console.WriteLine($"Frase     : {d?.Frase ?? "—"}");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("==============================================");
+                Console.ResetColor();
 
-                var likes = await ContarLikesRecibidosAsync(u.Id);
-                Console.WriteLine($"👍 Likes  : {likes}");
-                Console.WriteLine(new string('-', 40));
+                Console.WriteLine($"📇  Perfil de {nombre}\n");
+                Console.WriteLine($"{"ID".PadRight(12)}: {u.Id}");
+                Console.WriteLine($"{"Nombre".PadRight(12)}: {nombre}");
+                Console.WriteLine($"{"Edad".PadRight(12)}: {edad}");
+                Console.WriteLine($"{"Género".PadRight(12)}: {genero}");
+                Console.WriteLine($"{"Profesión".PadRight(12)}: {profesion}");
+                Console.WriteLine($"{"Intereses".PadRight(12)}: {intereses}");
+                Console.WriteLine($"{"Frase".PadRight(12)}: {frase}");
+
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("==============================================");
+                Console.ResetColor();
+
+                var likes    = await ContarLikesRecibidosAsync(u.Id);
+                var dislikes = await ContarDisLikesRecibidosAsync(u.Id);
+                Console.WriteLine($"👍 Likes  : {likes}    👎 Dislikes : {dislikes}");
+                Console.WriteLine(new string('-', 42));
 
                 Console.WriteLine("[N] Siguiente  [P] Anterior  [L] Like  [D] Dislike  [Q] Salir");
                 var key = Console.ReadKey(true).Key;
@@ -77,27 +91,32 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                         break;
 
                     case ConsoleKey.L:
-                        try
+                    {
+                        var creado = await DarLikeAsync(miUsuarioId, u.Id);
+                        if (creado)
                         {
-                            await DarLikeAsync(miUsuarioId, u.Id);
                             var nuevosLikes = await ContarLikesRecibidosAsync(u.Id);
                             Console.WriteLine($"❤️ Diste like a {d?.Nombre ?? u.Nombre}. Ahora tiene {nuevosLikes} likes.");
                         }
-                        catch (Exception ex)
-                        {
-                            Console.WriteLine($"⚠️ {ex.Message}");
-                        }
-                        Console.WriteLine("Presiona una tecla para continuar...");
-                        Console.ReadKey(true);
-                        idx = (idx + 1) % usuarios.Count; 
-                        break;
-
-                    case ConsoleKey.D:
-                        Console.WriteLine($"👎 Dislike a {d?.Nombre ?? u.Nombre}.");
                         Console.WriteLine("Presiona una tecla para continuar...");
                         Console.ReadKey(true);
                         idx = (idx + 1) % usuarios.Count;
                         break;
+                    }
+
+                    case ConsoleKey.D:
+                    {
+                        var creado = await DarDisLikeAsync(miUsuarioId, u.Id);
+                        if (creado)
+                        {
+                            var nuevosDislikes = await ContarDisLikesRecibidosAsync(u.Id);
+                            Console.WriteLine($"👎 Dislike a {d?.Nombre ?? u.Nombre}. Ahora tiene {nuevosDislikes} dislikes.");
+                        }
+                        Console.WriteLine("Presiona una tecla para continuar...");
+                        Console.ReadKey(true);
+                        idx = (idx + 1) % usuarios.Count;
+                        break;
+                    }
 
                     case ConsoleKey.Q:
                         salir = true;
@@ -106,30 +125,49 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
             }
         }
 
-        private Task<int> ContarLikesRecibidosAsync(int usuarioId)
-        {
-            return _context.Likes.CountAsync(l => l.UsuarioLikedId == usuarioId);
-        }
+        private Task<int> ContarLikesRecibidosAsync(int usuarioId) =>
+            _context.Likes.CountAsync(l => l.UsuarioLikedId == usuarioId && l.EsLike);
 
-        private async Task DarLikeAsync(int usuarioId, int usuarioLikedId)
+        private Task<int> ContarDisLikesRecibidosAsync(int usuarioId) =>
+            _context.Likes.CountAsync(l => l.UsuarioLikedId == usuarioId && !l.EsLike);
+
+        // ===========================
+        // SOLO UNA REACCIÓN POR PAREJA
+        // ===========================
+        private async Task<bool> ReaccionarAsync(int usuarioId, int usuarioLikedId, bool esLike)
         {
             if (usuarioId == usuarioLikedId)
-                throw new Exception("No puedes darte like a ti mismo.");
+            {
+                Console.WriteLine("⚠️ No puedes reaccionarte a ti mismo.");
+                return false;
+            }
 
+            // ¿Ya existe cualquier reacción (like o dislike) entre ambos?
             bool yaExiste = await _context.Likes
                 .AnyAsync(l => l.UsuarioId == usuarioId && l.UsuarioLikedId == usuarioLikedId);
 
             if (yaExiste)
-                throw new Exception("Ya diste like a este usuario.");
+            {
+                Console.WriteLine("ℹ️ Ya reaccionaste a este usuario (solo se permite 1 reacción total).");
+                return false;
+            }
 
             await _context.Likes.AddAsync(new Like
             {
                 UsuarioId = usuarioId,
                 UsuarioLikedId = usuarioLikedId,
+                EsLike = esLike,
                 Fecha = DateTime.UtcNow
             });
 
             await _context.SaveChangesAsync();
+            return true;
         }
+
+        private Task<bool> DarLikeAsync(int usuarioId, int usuarioLikedId) =>
+            ReaccionarAsync(usuarioId, usuarioLikedId, true);
+
+        private Task<bool> DarDisLikeAsync(int usuarioId, int usuarioLikedId) =>
+            ReaccionarAsync(usuarioId, usuarioLikedId, false);
     }
 }

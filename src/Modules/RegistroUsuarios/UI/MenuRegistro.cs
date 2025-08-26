@@ -39,7 +39,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.RegistroUsuarios.UI
                        
                         var datoRepo = new DatoRepository(_context);
                         var datoService = new DatosService(datoRepo, _usuarioRepo);
-                        var menuDatos = new MenuDatos(datoService, _miUsuarioId);
+                        var menuDatos = new MenuDatos(datoService, _context, _miUsuarioId);
                         await menuDatos.RenderMenuAsync();
                         break;
 

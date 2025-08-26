@@ -1,18 +1,22 @@
 // src/Modules/Usuarios/UI/MenuDatos.cs
 using System;
 using System.Threading.Tasks;
+using campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI;
 using campuslove_Juliana_Eduardo.src.Modules.Usuarios.Application.Interfaces;
+using campuslove_Juliana_Eduardo.src.Shared.Context;
 
 namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
 {
     public class MenuDatos
     {
         private readonly IDatoService _datoService;
-        private readonly int _usuarioId; // <- llega desde el login / menú principal
+        private readonly AppDbContext _context;    
+        private readonly int _usuarioId;            
 
-        public MenuDatos(IDatoService datoService, int usuarioId)
+        public MenuDatos(IDatoService datoService, AppDbContext context, int usuarioId)
         {
-            _datoService = datoService;
+            _datoService = datoService ?? throw new ArgumentNullException(nameof(datoService));
+            _context = context ?? throw new ArgumentNullException(nameof(context));
             _usuarioId = usuarioId;
         }
 
@@ -21,11 +25,16 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
             bool salir = false;
             while (!salir)
             {
-                Console.Clear();
-                Console.WriteLine("=== Menú Datos ===");
-                Console.WriteLine("1. Registrar datos (perfil)");
-                Console.WriteLine("2. Actualizar datos (perfil)");
-                Console.WriteLine("3. Volver");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("+=======================================+");
+                Console.WriteLine("|           📋  Menú de Datos           |");
+                Console.WriteLine("+=======================================+");
+                Console.WriteLine("|   1. 📝 Registrar datos (perfil)      |");
+                Console.WriteLine("|   2. ✏️  Actualizar datos (perfil)     |");
+                Console.WriteLine("|   3. 👀 Ver Perfiles                   |");
+                Console.WriteLine("|   4. 🔙 Volver                         |");
+                Console.WriteLine("+=======================================+");
+                Console.ResetColor();
                 Console.Write("Opción: ");
                 var op = Console.ReadLine();
 
@@ -34,12 +43,20 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
                     case "1":
                         await RegistrarDatosAsync_Menu();
                         break;
+
                     case "2":
                         await ActualizarDatosAsync_Menu();
                         break;
+
                     case "3":
+                        var perfiles = new Perfil(_context);
+                        await perfiles.VerPerfilesAsync(_usuarioId);
+                        break;
+
+                    case "4":
                         salir = true;
                         break;
+
                     default:
                         Console.WriteLine("Opción inválida. Presiona una tecla...");
                         Console.ReadKey(true);
@@ -118,14 +135,14 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
             Console.Clear();
             Console.WriteLine("=== Actualizar datos (perfil) ===");
 
-            var nuevoNombre   = PedirObligatorio("Nuevo nombre");
-            var nuevoEmail    = PedirEmail("Nuevo email");
-            var nuevaEdad     = PedirEnteroPositivo("Nueva edad");
-            var nuevoGenero   = PedirObligatorio("Nuevo género");
-            var nuevaProf     = PedirObligatorio("Nueva profesión");
+            var nuevoNombre = PedirObligatorio("Nuevo nombre");
+            var nuevoEmail  = PedirEmail("Nuevo email");
+            var nuevaEdad   = PedirEnteroPositivo("Nueva edad");
+            var nuevoGenero = PedirObligatorio("Nuevo género");
+            var nuevaProf   = PedirObligatorio("Nueva profesión");
             Console.Write("Nuevos intereses (separados por coma): ");
-            var nuevosInter   = (Console.ReadLine() ?? "").Trim();
-            var nuevaFrase    = PedirObligatorio("Nueva frase");
+            var nuevosInter = (Console.ReadLine() ?? "").Trim();
+            var nuevaFrase  = PedirObligatorio("Nueva frase");
 
             try
             {
