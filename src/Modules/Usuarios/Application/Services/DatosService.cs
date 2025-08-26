@@ -15,44 +15,41 @@ public class DatosService : IDatoService
         _usuarioRepo = usuarioRepo ?? throw new ArgumentNullException(nameof(usuarioRepo));
     }
 
-    
- 
-        public async Task RegistrarDatosAsync(
-            int usuarioId, string nombre, string email, int edad,
-            string genero, string profesion, string intereses, string frase)
+    public async Task RegistrarDatosAsync(
+        int usuarioId, string nombre, string email, int edad,
+        string genero, string profesion, string intereses, string frase)
+    {
+     
+        _ = await _usuarioRepo.GetByIdAsync(usuarioId)
+            ?? throw new Exception("Usuario no existe. Crea primero usuario (nombre/clave).");
+
+      
+        var yaTiene = await _datosRepo.GetByUsuarioIdAsync(usuarioId);
+        if (yaTiene != null)
+            throw new Exception("Este usuario ya tiene datos registrados. Usa 'Actualizar datos'.");
+
+      
+        var emailNorm = (email ?? "").Trim().ToLowerInvariant();
+        if (await _datosRepo.ExistsEmailAsync(emailNorm))
+            throw new Exception("El email ya está registrado.");
+
+        var dato = new Dato
         {
-            // FK válida
-            var user = await _usuarioRepo.GetByIdAsync(usuarioId)
-                    ?? throw new Exception("Usuario no existe. Crea primero usuario (nombre/clave).");
+            UsuarioId = usuarioId,
+            Nombre    = (nombre ?? "").Trim(),
+            Email     = emailNorm,
+            Edad      = edad,
+            Genero    = (genero ?? "").Trim(),
+            Profesion = (profesion ?? "").Trim(),
+            Intereses = (intereses ?? "").Trim(),
+            Frase     = (frase ?? "").Trim()
+        };
 
-            // Ya tiene perfil?
-            var yaTiene = await _datosRepo.GetByUsuarioIdAsync(usuarioId);
-            if (yaTiene != null)
-                throw new Exception("Este usuario ya tiene datos registrados. Usa 'Actualizar datos'.");
+        await _datosRepo.Add(dato);
+        await _datosRepo.SaveAsync();
+    }
 
-            // Email único
-            var emailNorm = (email ?? "").Trim().ToLowerInvariant();
-            if (await _datosRepo.ExistsEmailAsync(emailNorm))
-                throw new Exception("El email ya está registrado.");
-
-            var dato = new Dato
-            {
-                UsuarioId = usuarioId,
-                Nombre    = (nombre ?? "").Trim(),
-                Email     = emailNorm,
-                Edad      = edad,
-                Genero    = (genero ?? "").Trim(),
-                Profesion = (profesion ?? "").Trim(),
-                Intereses = (intereses ?? "").Trim(),
-                Frase     = (frase ?? "").Trim()
-            };
-
-            await _datosRepo.Add(dato);
-            await _datosRepo.SaveAsync();
-        }
-
-
-       public async Task ActualizarDatosAsync(
+    public async Task ActualizarDatosAsync(
         int usuarioId,
         string nuevoNombre,
         string nuevoEmail,
@@ -62,21 +59,11 @@ public class DatosService : IDatoService
         string nuevoIntereses,
         string nuevaFrase)
     {
-  
-        var usuario = await _usuarioRepo.GetByIdAsync(usuarioId)
-                     ?? throw new Exception($"❌ Usuario con ID {usuarioId} no encontrado.");
+        
+        _ = await _usuarioRepo.GetByIdAsync(usuarioId)
+            ?? throw new Exception($"❌ Usuario con ID {usuarioId} no encontrado.");
 
-      
-        if (!string.IsNullOrWhiteSpace(nuevoNombre))
-        {
-            var n = nuevoNombre.Trim();
-            if (usuario.Nombre != n)
-            {
-                usuario.Nombre = n;
-                await _usuarioRepo.Update(usuario);
-            }
-        }
-
+        
         var dato = await _datosRepo.GetByUsuarioIdAsync(usuarioId);
         if (dato is null)
         {
@@ -84,26 +71,24 @@ public class DatosService : IDatoService
             await _datosRepo.Add(dato);
         }
 
-        var emailNorm = (nuevoEmail ?? string.Empty).Trim().ToLowerInvariant();
-        if (!string.IsNullOrEmpty(emailNorm) &&
-            !string.Equals(dato.Email ?? string.Empty, emailNorm, StringComparison.OrdinalIgnoreCase))
+       
+        var emailNorm = (nuevoEmail ?? "").Trim().ToLowerInvariant();
+        if (!string.Equals(dato.Email ?? "", emailNorm, StringComparison.OrdinalIgnoreCase))
         {
             if (await _datosRepo.ExistsEmailAsync(emailNorm))
                 throw new Exception("⚠️ El email ya está registrado.");
             dato.Email = emailNorm;
         }
 
-        
+       
         dato.Nombre    = string.IsNullOrWhiteSpace(nuevoNombre) ? dato.Nombre : nuevoNombre.Trim();
         dato.Edad      = nuevaEdad;
-        dato.Genero    = (nuevoGenero ?? string.Empty).Trim();
-        dato.Profesion = (nuevaProfesion ?? string.Empty).Trim();
-        dato.Intereses = (nuevoIntereses ?? string.Empty).Trim();
-        dato.Frase     = (nuevaFrase ?? string.Empty).Trim();
+        dato.Genero    = (nuevoGenero ?? "").Trim();
+        dato.Profesion = (nuevaProfesion ?? "").Trim();
+        dato.Intereses = (nuevoIntereses ?? "").Trim();
+        dato.Frase     = (nuevaFrase ?? "").Trim();
 
         await _datosRepo.Update(dato);
-
-        await _usuarioRepo.SaveAsync();
-        await _datosRepo.SaveAsync();
+        await _datosRepo.SaveAsync(); 
     }
 }
