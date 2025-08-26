@@ -46,12 +46,15 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.Infrastructure.Reposit
 
 
 
-         public async Task<Usuario?> GetByNombreAsync(string nombre)
+        public async Task<Usuario?> GetByNombreAsync(string nombre)
         {
             var n = (nombre ?? string.Empty).Trim();
             return await _context.Usuarios
                 .FirstOrDefaultAsync(u => u.Nombre == n);
         }
+        
+
+        
     }
     
 

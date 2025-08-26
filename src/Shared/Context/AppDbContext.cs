@@ -15,7 +15,9 @@ namespace campuslove_Juliana_Eduardo.src.Shared.Context
         public DbSet<Usuario> Usuarios => Set<Usuario>();
          public DbSet<Like> Likes => Set<Like>();
 
-         public DbSet<Dato> Datos => Set<Dato>(); 
+        
+         public DbSet<Dato> Datos { get; set; } = null!;
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

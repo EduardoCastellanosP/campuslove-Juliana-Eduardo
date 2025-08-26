@@ -12,7 +12,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.Domain.Entities
     public string Clave  { get; set; } = null!;
     public int LikesDisponibles { get; set; } = 5;
 
-    public Dato Dato { get; set; } = null!;
+    public Dato? Dato { get; set; } = null!;
         
 
 

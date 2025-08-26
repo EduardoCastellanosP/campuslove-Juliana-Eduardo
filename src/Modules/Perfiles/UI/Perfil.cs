@@ -1,4 +1,5 @@
 using System;
+using System.Linq; // <-- IMPORTANTE
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using campuslove_Juliana_Eduardo.src.Shared.Context;
@@ -24,8 +25,10 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                 return;
             }
 
+            // Cargar usuarios + su perfil (tabla 'datos')
             var usuarios = await _context.Set<Usuario>()
                 .AsNoTracking()
+                .Include(u => u.Dato) 
                 .Where(u => u.Id != miUsuarioId) // no mostrarte a ti mismo
                 .ToListAsync();
 
@@ -43,15 +46,19 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
             {
                 Console.Clear();
                 var u = usuarios[idx];
+                var d = u.Dato; // puede ser null si aún no registraron "datos" para ese usuario
 
                 Console.WriteLine("=== Perfil ===");
                 Console.WriteLine($"ID        : {u.Id}");
-                Console.WriteLine($"Nombre    : {u.Nombre}");
-                Console.WriteLine($"Edad      : {u.Edad}");
-                Console.WriteLine($"Género    : {u.Genero}");
-                Console.WriteLine($"Profesión : {u.Profesion}");
-                Console.WriteLine($"Intereses : {u.Intereses}");
-                Console.WriteLine($"Frase     : {u.Frase}");
+                Console.WriteLine($"Nombre    : {d?.Nombre ?? u.Nombre}"); // muestra el de datos si existe, sino el de usuario
+
+                // Campos que ahora están en 'datos'
+                Console.WriteLine($"Edad      : {(d is null ? "—" : d.Edad.ToString())}");
+                Console.WriteLine($"Género    : {d?.Genero ?? "—"}");
+                Console.WriteLine($"Profesión : {d?.Profesion ?? "—"}");
+                Console.WriteLine($"Intereses : {d?.Intereses ?? "—"}");
+                Console.WriteLine($"Frase     : {d?.Frase ?? "—"}");
+
                 var likes = await ContarLikesRecibidosAsync(u.Id);
                 Console.WriteLine($"👍 Likes  : {likes}");
                 Console.WriteLine(new string('-', 40));
@@ -74,7 +81,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                         {
                             await DarLikeAsync(miUsuarioId, u.Id);
                             var nuevosLikes = await ContarLikesRecibidosAsync(u.Id);
-                            Console.WriteLine($"❤️ Diste like a {u.Nombre}. Ahora tiene {nuevosLikes} likes.");
+                            Console.WriteLine($"❤️ Diste like a {d?.Nombre ?? u.Nombre}. Ahora tiene {nuevosLikes} likes.");
                         }
                         catch (Exception ex)
                         {
@@ -86,7 +93,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Perfiles.UI
                         break;
 
                     case ConsoleKey.D:
-                        Console.WriteLine($"👎 Dislike a {u.Nombre}.");
+                        Console.WriteLine($"👎 Dislike a {d?.Nombre ?? u.Nombre}.");
                         Console.WriteLine("Presiona una tecla para continuar...");
                         Console.ReadKey(true);
                         idx = (idx + 1) % usuarios.Count;

@@ -19,7 +19,7 @@ while (!salir)
 
     Console.WriteLine("1. Registro/Login");
     Console.WriteLine("2. Ver Perfiles");
-    Console.WriteLine("3. Salir\n"); // <-- corregido (era 2)
+    Console.WriteLine("3. Salir\n"); 
 
     Console.Write("Seleccione una opción: ");
     string opcion = Console.ReadLine() ?? "";

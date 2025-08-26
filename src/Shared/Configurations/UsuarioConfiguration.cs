@@ -6,19 +6,27 @@ namespace campuslove_Juliana_Eduardo.src.Shared.Configurations
 {
     public class UsuarioConfiguration : IEntityTypeConfiguration<Usuario>
     {
-              public void Configure(EntityTypeBuilder<Usuario> builder)
-              {
-                     builder.ToTable("usuario");
+        public void Configure(EntityTypeBuilder<Usuario> builder)
+        {
+            builder.ToTable("usuario");
 
-                     builder.HasKey(u => u.Id);
+            builder.HasKey(u => u.Id);
 
-                     builder.Property(u => u.Nombre)
-                            .IsRequired()
-                            .HasMaxLength(100);
+            builder.Property(u => u.Nombre)
+                   .IsRequired()
+                   .HasMaxLength(100);
 
-                     builder.Property(u => u.Clave)
-                          .IsRequired()
-                          .HasMaxLength(100);
+            builder.Property(u => u.Clave)
+                 .IsRequired()
+                 .HasMaxLength(100);
+
+                 builder.Property(u => u.LikesDisponibles)
+                .HasColumnName("likes_disponibles")
+                .HasDefaultValue(5)
+                .IsRequired();
+
+                          
+                
 
                      
 
