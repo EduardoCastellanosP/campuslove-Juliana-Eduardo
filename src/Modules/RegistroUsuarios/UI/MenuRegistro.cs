@@ -27,9 +27,14 @@ namespace campuslove_Juliana_Eduardo.src.Modules.RegistroUsuarios.UI
             while (!salir)
             {
                 Console.Clear();
-                Console.WriteLine("=== Menú de Registro de Usuarios ===");
-                Console.WriteLine("1. Registrar Datos (perfil)");
-                Console.WriteLine("2. Volver al Menú Principal");
+                Console.ForegroundColor = ConsoleColor.Cyan;
+                Console.WriteLine("╔════════════════════════════════════════════╗");
+                Console.WriteLine("║      📋  Menú de Registro de Usuarios      ║");
+                Console.WriteLine("╠════════════════════════════════════════════╣");
+                Console.WriteLine("║  1) 📝 Registrar datos (perfil)            ║");
+                Console.WriteLine("║  2) 🔙 Volver al menú principal            ║");
+                Console.WriteLine("╚════════════════════════════════════════════╝");
+                Console.ResetColor();
                 Console.Write("Seleccione una opción: ");
                 var opcion = Console.ReadLine();
 

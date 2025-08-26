@@ -27,12 +27,14 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
             {
                 Console.ForegroundColor = ConsoleColor.Cyan;
                 Console.WriteLine("+=======================================+");
-                Console.WriteLine("|           📋  Menú de Datos           |");
+                Console.WriteLine("|           📋  Menú de Datos            |");
                 Console.WriteLine("+=======================================+");
-                Console.WriteLine("|   1. 📝 Registrar datos (perfil)      |");
+                Console.WriteLine("|   1. 📝 Registrar datos (perfil)       |");
                 Console.WriteLine("|   2. ✏️  Actualizar datos (perfil)     |");
                 Console.WriteLine("|   3. 👀 Ver Perfiles                   |");
-                Console.WriteLine("|   4. 🔙 Volver                         |");
+                Console.WriteLine("|   4. 💘 Ver matches                    |");
+                Console.WriteLine("|   5. 📈 Estadisticas                   |");
+                Console.WriteLine("|   6. 🔙 Volver                         |");
                 Console.WriteLine("+=======================================+");
                 Console.ResetColor();
                 Console.Write("Opción: ");
@@ -49,11 +51,25 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
                         break;
 
                     case "3":
+                        if (_usuarioId <= 0)
+                        {
+                            Console.WriteLine("⚠️ Debes iniciar sesión para ver perfiles (usuarioId inválido).");
+                            Console.ReadKey(true);
+                            break;
+                        }
                         var perfiles = new Perfil(_context);
                         await perfiles.VerPerfilesAsync(_usuarioId);
                         break;
 
                     case "4":
+                        await new Perfil(_context).VerMatchesAsync(_usuarioId);
+                        break;
+                    
+                    case "5":
+                        await new Perfil(_context).VerEstadisticasSimpleAsync();
+                        break;
+
+                    case "6":
                         salir = true;
                         break;
 
@@ -65,7 +81,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
             }
         }
 
-        // ---------- Helpers mínimos ----------
+      
         private static string PedirObligatorio(string label)
         {
             while (true)
@@ -99,7 +115,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
             }
         }
 
-        // ---------- Registrar (NO pide ID) ----------
+        
         private async Task RegistrarDatosAsync_Menu()
         {
             Console.Clear();
@@ -129,7 +145,7 @@ namespace campuslove_Juliana_Eduardo.src.Modules.Usuarios.UI
             Console.ReadKey(true);
         }
 
-        // ---------- Actualizar (NO pide ID) ----------
+       
         private async Task ActualizarDatosAsync_Menu()
         {
             Console.Clear();

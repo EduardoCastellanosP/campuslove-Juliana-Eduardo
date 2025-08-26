@@ -16,7 +16,7 @@ public class DatosService : IDatoService
     }
 
     
-    // DatosService.cs (método para registrar DESDE CERO)
+ 
         public async Task RegistrarDatosAsync(
             int usuarioId, string nombre, string email, int edad,
             string genero, string profesion, string intereses, string frase)

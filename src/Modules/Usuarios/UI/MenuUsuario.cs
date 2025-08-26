@@ -104,6 +104,7 @@ namespace CampusLove.Modules.Usuarios.UI
                             {
                                 Console.WriteLine($"✅ Bienvenido, {usuario.Nombre}.");
                                 Sesion.UsuarioLogueado = true;
+                                Sesion.UsuarioId = usuario.Id;
                                 Console.WriteLine("✅ Inicio de sesión exitoso.");
                                 await new MenuRegistro(_context, usuario.Id).RenderMenu();
                             }
