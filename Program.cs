@@ -12,7 +12,7 @@ while (!salir)
 {
    Console.ForegroundColor = ConsoleColor.Magenta;
     Console.WriteLine("+=======================================+");
-    Console.WriteLine("|       Bienvenido a Campus Love ❤️      |");
+    Console.WriteLine("|       Bienvenido a Campus Love ❤️     |");
     Console.WriteLine("+=======================================+");
     Console.WriteLine("|       1. Registro/Login               |");
     Console.WriteLine("|       2. Salir                        |");
@@ -46,5 +46,5 @@ while (!salir)
 public static class Sesion
 {
     public static bool UsuarioLogueado { get; set; } = false;
-    public static int? UsuarioId { get; set; } = null; // <-- guarda el Id
+    public static int? UsuarioId { get; set; } = null; 
 }
