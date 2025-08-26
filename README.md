@@ -33,30 +33,8 @@ App de consola tipo “dating” para practicar C#, Entity Framework Core y arqu
 
 ## 🗂️ Estructura del proyecto
 
-src/
-├─ Modules/
-│ ├─ Usuarios/
-│ │ ├─ Domain/Entities/
-│ │ │ ├─ Usuario.cs # login (nombreUsuario + clave + likesDisponibles)
-│ │ │ ├─ Dato.cs # perfil 1:1 con Usuario
-│ │ │ └─ Like.cs # reacciones (like/dislike)
-│ │ ├─ Application/
-│ │ │ ├─ Interfaces/ # IUsuarioRepository, IDatoRepository, IDatoService, ...
-│ │ │ └─ Services/
-│ │ │ ├─ UsuarioService.cs # crea cuentas (NO actualiza login)
-│ │ │ └─ DatosService.cs # registrar/actualizar perfil (solo Dato)
-│ │ └─ Infrastructure/Repositories/
-│ │ ├─ UsuarioRepository.cs
-│ │ └─ DatoRepository.cs # maneja tracking para evitar entidades duplicadas
-│ ├─ Perfiles/UI/
-│ │ └─ Perfil.cs # ver perfiles, reaccionar, ver matches, estadísticas
-│ └─ Usuarios/UI/
-│ ├─ MenuUsuario.cs # crear cuenta + login
-│ └─ MenuDatos.cs # registrar/actualizar perfil, ver perfiles/matches/estadísticas
-├─ Shared/
-│ ├─ Context/AppDbContext.cs
-│ └─ Configurations/ # mapeos EF Core (Usuario/Dato/Like)
-└─ Program.cs
+<img width="689" height="593" alt="Captura de pantalla 2025-08-26 001452" src="https://github.com/user-attachments/assets/da5eca0a-f021-4426-9e36-44f5618bc312" />
+
 
 
 ---
